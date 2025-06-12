@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const locationColors = {
   Mcmillan: 'red',
   Goddard: 'blue',
-  BeltsVille: 'green'
+  Beltsville: 'green'
 };
 
 function Sidebar() {
@@ -45,7 +45,7 @@ function Sidebar() {
 }
 
 function ComparisonPlot({ chemical }) {
-  const allLocations = ["Mcmillan", "Goddard", "BeltsVille"];
+  const allLocations = ["Mcmillan", "Goddard", "Beltsville"];
   const [selectedLocations, setSelectedLocations] = useState(["Mcmillan"]);
   const [year, setYear] = useState(new Date().getFullYear());
   const [compareData, setCompareData] = useState(null);
@@ -61,7 +61,8 @@ function ComparisonPlot({ chemical }) {
     params.append("chemical", chemical);
     params.append("year", year);
 
-    fetch(`http://localhost:8000/compare?${params.toString()}`)
+    // fetch(`http://localhost:8000/compare?${params.toString()}`)
+    fetch(`api/compare?${params.toString()}`)
       .then(res => res.json())
       .then(json => setCompareData(json));
   }, [selectedLocations, year, chemical]);
@@ -186,7 +187,7 @@ function ComparisonPlot({ chemical }) {
         <span>
           <span style={{ color: "red" }}>⬤  </span> Mcmillan&nbsp;
           <span style={{ color: "blue" }}>⬤ </span> Goddard&nbsp;
-          <span style={{ color: "green" }}>⬤   </span> BeltsVille
+          <span style={{ color: "green" }}>⬤   </span> Beltsville
         </span>
         <em>
           * This is only high quality data (10 = not-assured high quality)<br />
@@ -203,7 +204,8 @@ function MainPlot({ chemical }) {
   const [markerColor, setMarkerColor] = useState(locationColors["Mcmillan"]);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/data?range=${range}&location=${location}&chemical=${chemical}`)
+    // fetch(`http://localhost:8000/data?range=${range}&location=${location}&chemical=${chemical}`)
+    fetch(`api/data?range=${range}&location=${location}&chemical=${chemical}`)
       .then(res => res.json())
       .then(json => {
         setData(json);
@@ -219,7 +221,7 @@ function MainPlot({ chemical }) {
         <select value={location} onChange={e => setLocation(e.target.value)}>
           <option value="Mcmillan">Mcmillan</option>
           <option value="Goddard">Goddard</option>
-          <option value="BeltsVille">BeltsVille</option>
+          <option value="Beltsville">Beltsville</option>
         </select>
         <select value={range} onChange={e => setRange(e.target.value)}>
           <option value="3d">Last 3 Days</option>
@@ -286,7 +288,7 @@ function MainPlot({ chemical }) {
         <span>
           <span style={{ color: "red" }}>⬤  </span> Mcmillan&nbsp;
           <span style={{ color: "blue" }}>⬤ </span> Goddard&nbsp;
-          <span style={{ color: "green" }}>⬤   </span> BeltsVille
+          <span style={{ color: "green" }}>⬤   </span> Beltsville
         </span>
         <em>
           * This is only high quality data (10 = not-assured high quality)<br />
