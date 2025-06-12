@@ -6,11 +6,11 @@ import NitrogenDioxidePage from "./NitrogenDioxidePage";
 function App() {
   return (
     <Router>
-      <nav style={{ marginBottom: 20 }}>
+      {/* <nav style={{ marginBottom: 20 }}>
         <Link to="/" style={{ marginRight: 20 }}>Home</Link>
         <Link to="/formaldehyde" style={{ marginRight: 20 }}>Formaldehyde (HCHO)</Link>
         <Link to="/no2">Nitrogen Dioxide (NO₂)</Link>
-      </nav>
+      </nav> */}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/formaldehyde" element={<FormaldehydePage />} />

@@ -67,7 +67,7 @@ function ComparisonPlot({ chemical }) {
   }, [selectedLocations, year, chemical]);
 
   // Set a fixed plot width for all locations
-  const plotWidth = 470 + allLocations.length * 320; // Fixed width for 3 locations
+  const plotWidth = 470 + allLocations.length * 270; // Fixed width for 3 locations
 
   // Filter locations that have data for the selected year
   const filteredLocations = selectedLocations.filter(loc => {
@@ -168,7 +168,7 @@ function ComparisonPlot({ chemical }) {
       />
       <div style={{
         position: "relative",
-        right: "-750px",
+        right: "-600px",
         bottom: "30px",
         fontSize: "0.85rem",
         color: "#666",
@@ -268,7 +268,7 @@ function MainPlot({ chemical }) {
 
       <div style={{
         position: "relative",
-        right: "-750px",
+        right: "-600px",
         bottom: "30px",
         fontSize: "0.85rem",
         color: "#666",
@@ -301,19 +301,22 @@ export default function FormaldehydePage() {
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#fcfcfc" }}>
       <Sidebar />
-      <main style={{
-        marginLeft: 180,
-        width: "calc(100vw - 180px)",
-        maxWidth: "calc(100vw - 180px)",
-        padding: "2.5rem 2rem 2rem 2rem",
-        fontFamily: "Inter, Segoe UI, Arial, sans-serif",
-        boxSizing: "border-box"
-      }}>
+      <main 
+        style={{
+          marginLeft: 180,
+          width: "100%",
+          maxWidth: 1400, // or your preferred max width
+          marginRight: "auto",
+          padding: "2.5rem 2rem 2rem 2rem",
+          fontFamily: "Inter, Segoe UI, Arial, sans-serif",
+          boxSizing: "border-box"
+        }}
+      >
         <section style={{ marginBottom: "3.5rem", background: "#fff", borderRadius: 10, boxShadow: "0 2px 8px #0001", padding: "2rem" }}>
           <h2 style={{ marginTop: 0 }}>Formaldehyde Time Series - Pandora</h2>
           <p>
             This section displays the time series of formaldehyde (HCHO) total column as measured by Pandora at selected locations. 
-            You can filter by location and time range. Edit this paragraph to describe your methodology, data sources, or any other relevant information.
+            You can filter by location and time range.
           </p>
           <MainPlot chemical="HCHO" />
         </section>
@@ -321,12 +324,11 @@ export default function FormaldehydePage() {
           <h2 style={{ marginTop: 0 }}>Comparison with Other Sites</h2>
           <p>
             This section allows you to compare monthly distributions of formaldehyde across different sites for a selected year. 
-            Edit this paragraph to explain the comparison, site selection, or any caveats about the data.
           </p>
           <ComparisonPlot chemical="HCHO" />
         </section>
         <footer style={{ marginTop: "3rem", color: "#888", fontSize: "0.95rem", textAlign: "center" }}>
-          <em>Edit this footnote to add any disclaimers, credits, or additional info for your dashboard.</em>
+          <em>Work in progress..</em>
         </footer>
       </main>
     </div>

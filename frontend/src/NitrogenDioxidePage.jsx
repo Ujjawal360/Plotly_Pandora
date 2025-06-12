@@ -1,11 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
+import { Link } from "react-router-dom";
 
 const locationColors = {
   Mcmillan: 'red',
   Goddard: 'blue',
   BeltsVille: 'green'
 };
+
+function Sidebar() {
+  return (
+    <nav style={{
+      width: 180,
+      minHeight: "100vh",
+      background: "#111",
+      borderRight: "1px solidrgb(0, 0, 0)",
+      padding: "1.5rem 1rem",
+      position: "fixed",
+      left: 0,
+      top: 0,
+      fontFamily: "Arial, sans-serif",
+      fontSize: "0.97rem",
+      color: "#fff",
+      letterSpacing: 0.1,
+      zIndex: 100,
+      boxSizing: "border-box"
+    }}>
+      <div style={{ fontWeight: 700, fontSize: "0.95rem", marginBottom: "2.2rem", color: "#fff" }}>
+        Pandora Dashboard
+      </div>
+      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        <li style={{ marginBottom: 16 }}>
+          <Link to="/" style={{ textDecoration: "none", color: "#fff", opacity: 0.92 }}>Home</Link>
+        </li>
+        <li style={{ marginBottom: 16 }}>
+          <Link to="/formaldehyde" style={{ textDecoration: "none", color: "#fff", opacity: 0.92 }}>Formaldehyde (HCHO)</Link>
+        </li>
+        <li>
+          <Link to="/no2" style={{ textDecoration: "none", color: "#fff", opacity: 0.92 }}>Nitrogen Dioxide (NO₂)</Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
 
 function ComparisonPlot({ chemical }) {
   const allLocations = ["Mcmillan", "Goddard", "BeltsVille"];
@@ -16,7 +53,6 @@ function ComparisonPlot({ chemical }) {
   useEffect(() => {
     if (selectedLocations.length === 0) return;
 
-    // Clear compareData before fetching new data
     setCompareData(null);
 
     const params = new URLSearchParams();
@@ -29,49 +65,43 @@ function ComparisonPlot({ chemical }) {
       .then(json => setCompareData(json));
   }, [selectedLocations, year, chemical]);
 
-  // Set a fixed plot width for all locations
-  const plotWidth = 500 + allLocations.length * 350; // Fixed width for 3 locations
+  const plotWidth = 470 + allLocations.length * 270;
 
-  // Filter locations that have data for the selected year
   const filteredLocations = selectedLocations.filter(loc => {
     const months = compareData?.[loc] || {};
-    return Object.keys(months).some(month => months[month].length > 0); // Check if there is any data for the year
+    return Object.keys(months).some(month => months[month].length > 0);
   });
 
-  // Check if at least one location has data for the selected year
   const hasDataForYear = filteredLocations.length > 0;
 
-  // Generate the plot data
   const plotData = hasDataForYear
     ? filteredLocations.map(loc => {
         const months = compareData[loc] || {};
         const x = [];
         const y = [];
-        const customdata = []; // Array to store additional data (e.g., dates)
-
+        const customdata = [];
         Object.entries(months).forEach(([month, values]) => {
           values.forEach((value, index) => {
-            x.push(Number(month)); // Use the month number as x
-            y.push(value.vertical_amount); // Use vertical_amount as y
-            customdata.push(value.date); // Add the date to customdata
+            x.push(Number(month));
+            y.push(value.vertical_amount);
+            customdata.push(value.date);
           });
         });
-
         return {
           y,
           x,
-          customdata, // Pass the additional data
+          customdata,
           type: "box",
-          name: loc, // Location name for the legend
+          name: loc,
           marker: { color: locationColors[loc] },
           boxpoints: "outliers",
           legendgroup: loc,
           showlegend: true,
-          hoverinfo: "y+name", // Default hover info
-          hovertemplate: 'Date: %{customdata}<br>Value: %{y:.3f}<extra></extra>', // Include date in hover
+          hoverinfo: "y+name",
+          hovertemplate: 'Date: %{customdata}<br>Value: %{y:.3f}<extra></extra>',
         };
       })
-    : []; // No data, return an empty array
+    : [];
 
   return (
     <div style={{ marginTop: 60 }}>
@@ -122,7 +152,7 @@ function ComparisonPlot({ chemical }) {
             title: { text: "Total Column (micromole/m²)", standoff: 10 },
             automargin: true
           },
-          margin: { l: 80, r: 50, b: 80, t: 50, pad: 10 }
+          margin: { l: 80, r: 50, b: 80, t: 50, pad: 10 },
         }}
         config={{
           displayModeBar: false,
@@ -130,7 +160,7 @@ function ComparisonPlot({ chemical }) {
       />
       <div style={{
         position: "relative",
-        right: "-750px",
+        right: "-600px",
         bottom: "30px",
         fontSize: "0.85rem",
         color: "#666",
@@ -230,7 +260,7 @@ function MainPlot({ chemical }) {
 
       <div style={{
         position: "relative",
-        right: "-750px",
+        right: "-600px",
         bottom: "30px",
         fontSize: "0.85rem",
         color: "#666",
@@ -255,19 +285,44 @@ function MainPlot({ chemical }) {
           * This is a 15 min average of the timeseries plot
         </em>
       </div>
-
-      {/* Comparison plot below info text */}
-      <ComparisonPlot chemical="NO2" />
     </div>
   );
 }
 
-export default function FormaldehydePage() {
+export default function NitrogenDioxidePage() {
   return (
-    <div>
-      <h2>Formaldehyde total column Pandora</h2>
-      <MainPlot chemical="NO2" />
-      {/* <ComparisonPlot chemical="NO2" /> */}
+    <div style={{ display: "flex", minHeight: "100vh", background: "#fcfcfc" }}>
+      <Sidebar />
+      <main 
+        style={{
+          marginLeft: 180,
+          width: "100%",
+          maxWidth: 1400,
+          marginRight: "auto",
+          padding: "2.5rem 2rem 2rem 2rem",
+          fontFamily: "Arial, sans-serif",
+          boxSizing: "border-box"
+        }}
+      >
+        <section style={{ marginBottom: "3.5rem", background: "#fff", borderRadius: 10, boxShadow: "0 2px 8px #0001", padding: "2rem" }}>
+          <h2 style={{ marginTop: 0 }}>Nitrogen Dioxide Time Series - Pandora</h2>
+          <p>
+            This section displays the time series of nitrogen dioxide (NO₂) total column as measured by Pandora at selected locations. 
+            You can filter by location and time range. 
+          </p>
+          <MainPlot chemical="NO2" />
+        </section>
+        <section style={{ background: "#fff", borderRadius: 10, boxShadow: "0 2px 8px #0001", padding: "2rem" }}>
+          <h2 style={{ marginTop: 0 }}>Comparison with Other Sites</h2>
+          <p>
+            This section allows you to compare monthly distributions of nitrogen dioxide across different sites for a selected year. 
+          </p>
+          <ComparisonPlot chemical="NO2" />
+        </section>
+        <footer style={{ marginTop: "3rem", color: "#888", fontSize: "0.95rem", textAlign: "center" }}>
+          <em>Work in progress..</em>
+        </footer>
+      </main>
     </div>
   );
 }
