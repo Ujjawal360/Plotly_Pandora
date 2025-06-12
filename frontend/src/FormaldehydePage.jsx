@@ -1,11 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
+import { Link } from "react-router-dom";
 
 const locationColors = {
   Mcmillan: 'red',
   Goddard: 'blue',
   BeltsVille: 'green'
 };
+
+function Sidebar() {
+  return (
+    <nav style={{
+      width: 180,
+      minHeight: "100vh",
+      background: "#111",
+      borderRight: "1px solidrgb(0, 0, 0)",
+      padding: "1.5rem 1rem",
+      position: "fixed",
+      left: 0,
+      top: 0,
+      fontFamily: "'Open Sans', Segoe UI, Arial, sans-serif",
+      fontSize: "0.97rem",
+      color: "#fff",
+      letterSpacing: 0.1,
+      zIndex: 100,
+      boxSizing: "border-box"
+    }}>
+      <div style={{ fontWeight: 700, fontSize: "0.95rem", marginBottom: "2.2rem", color: "#fff" }}>
+        Pandora Dashboard
+      </div>
+      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        <li style={{ marginBottom: 16 }}>
+          <Link to="/" style={{ textDecoration: "none", color: "#fff", opacity: 0.92 }}>Home</Link>
+        </li>
+        <li style={{ marginBottom: 16 }}>
+          <Link to="/formaldehyde" style={{ textDecoration: "none", color: "#fff", opacity: 0.92 }}>Formaldehyde (HCHO)</Link>
+        </li>
+        <li>
+          <Link to="/no2" style={{ textDecoration: "none", color: "#fff", opacity: 0.92 }}>Nitrogen Dioxide (NO₂)</Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
 
 function ComparisonPlot({ chemical }) {
   const allLocations = ["Mcmillan", "Goddard", "BeltsVille"];
@@ -30,7 +67,7 @@ function ComparisonPlot({ chemical }) {
   }, [selectedLocations, year, chemical]);
 
   // Set a fixed plot width for all locations
-  const plotWidth = 500 + allLocations.length * 350; // Fixed width for 3 locations
+  const plotWidth = 470 + allLocations.length * 320; // Fixed width for 3 locations
 
   // Filter locations that have data for the selected year
   const filteredLocations = selectedLocations.filter(loc => {
@@ -122,7 +159,8 @@ function ComparisonPlot({ chemical }) {
             title: { text: "Total Column (micromole/m²)", standoff: 10 },
             automargin: true
           },
-          margin: { l: 80, r: 50, b: 80, t: 50, pad: 10 }
+          margin: { l: 80, r: 50, b: 80, t: 50, pad: 10 },
+        //   legend: { visible: false }
         }}
         config={{
           displayModeBar: false,
@@ -255,19 +293,42 @@ function MainPlot({ chemical }) {
           * This is a 15 min average of the timeseries plot
         </em>
       </div>
-
-      {/* Comparison plot below info text */}
-      <ComparisonPlot chemical="HCHO" />
     </div>
   );
 }
 
 export default function FormaldehydePage() {
   return (
-    <div>
-      <h2>Formaldehyde total column Pandora</h2>
-      <MainPlot chemical="HCHO" />
-      {/* <ComparisonPlot chemical="HCHO" /> */}
+    <div style={{ display: "flex", minHeight: "100vh", background: "#fcfcfc" }}>
+      <Sidebar />
+      <main style={{
+        marginLeft: 180,
+        width: "calc(100vw - 180px)",
+        maxWidth: "calc(100vw - 180px)",
+        padding: "2.5rem 2rem 2rem 2rem",
+        fontFamily: "Inter, Segoe UI, Arial, sans-serif",
+        boxSizing: "border-box"
+      }}>
+        <section style={{ marginBottom: "3.5rem", background: "#fff", borderRadius: 10, boxShadow: "0 2px 8px #0001", padding: "2rem" }}>
+          <h2 style={{ marginTop: 0 }}>Formaldehyde Time Series - Pandora</h2>
+          <p>
+            This section displays the time series of formaldehyde (HCHO) total column as measured by Pandora at selected locations. 
+            You can filter by location and time range. Edit this paragraph to describe your methodology, data sources, or any other relevant information.
+          </p>
+          <MainPlot chemical="HCHO" />
+        </section>
+        <section style={{ background: "#fff", borderRadius: 10, boxShadow: "0 2px 8px #0001", padding: "2rem" }}>
+          <h2 style={{ marginTop: 0 }}>Comparison with Other Sites</h2>
+          <p>
+            This section allows you to compare monthly distributions of formaldehyde across different sites for a selected year. 
+            Edit this paragraph to explain the comparison, site selection, or any caveats about the data.
+          </p>
+          <ComparisonPlot chemical="HCHO" />
+        </section>
+        <footer style={{ marginTop: "3rem", color: "#888", fontSize: "0.95rem", textAlign: "center" }}>
+          <em>Edit this footnote to add any disclaimers, credits, or additional info for your dashboard.</em>
+        </footer>
+      </main>
     </div>
   );
 }
