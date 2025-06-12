@@ -9,14 +9,15 @@ const navStyle = {
   width: 180,
   minHeight: "100vh",
   background: "#111",
-  borderRight: "1px solid #222",
-  padding: "2.5rem 1.2rem 1.2rem 2rem",
+  borderRight: "1px solid rgb(0, 0, 0)", // <-- match this to your other pages
+  padding: "1.5rem 1rem",
   position: "fixed",
   left: 0,
   top: 0,
   fontFamily: "Arial, sans-serif",
-  fontSize: "1rem",
+  fontSize: "0.97rem",
   color: "#fff",
+  letterSpacing: 0.1,
   zIndex: 100,
   boxSizing: "border-box"
 };
