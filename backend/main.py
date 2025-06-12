@@ -15,8 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def load_data(location):
-    filename = f"HCHO_{location}.csv"
+def load_data(location, chemical):
+    filename = f"{chemical}_{location}.csv"
     df = pd.read_csv(filename)
     df['datetime_EST'] = pd.to_datetime(df['datetime_EST'], errors='coerce')
     df = df[df['quality'] == 'high quality na']
@@ -28,9 +28,10 @@ def load_data(location):
 @app.get("/data")
 def get_data(
     range: str = Query("all"),
-    location: str = Query("Mcmillan")
+    location: str = Query("Mcmillan"),
+    chemical: str = Query("HCHO")  # Add this line
 ):
-    df = load_data(location)
+    df = load_data(location, chemical)
     now = df['datetime_EST'].max()
 
     if range == "3d":
